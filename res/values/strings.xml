@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Query!</string>
+    <string name="app_name">publictransit.in</string>
+    <string name="Find_route">Find Route</string>
+    <string name="Goto_stop">Goto Stop</string>
+</resources>

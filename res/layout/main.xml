@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:layout_marginLeft="10px"
+	android:layout_marginRight="10px">
+	<AutoCompleteTextView android:layout_height="wrap_content"
+		android:layout_width="match_parent" android:autoLink="map"
+		android:singleLine="true" android:hint="Start stop" android:id="@+id/Start_stop"></AutoCompleteTextView>
+	<AutoCompleteTextView android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:autoLink="map"
+		android:singleLine="true" android:hint="End stop" android:id="@+id/End_stop"></AutoCompleteTextView>
+	<Button android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+		android:enabled="false" android:text="@string/Goto_stop" android:id="@+id/button1"
+		android:onClick="button1_click"></Button>
+</LinearLayout>
