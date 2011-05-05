@@ -1,4 +1,8 @@
-package publictransit.in;
+package in.publictransit;
+
+import in.publictransit.model.Database;
+
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -23,26 +27,25 @@ public class Query extends Activity
     private AutoCompleteTextView start_stop;
     private AutoCompleteTextView end_stop;
 
-    private static final String[] STOPS = new String[] { "Broadway",
-	    "Tambaram", "Chennai Central", "Adayar B.S", "Thiruvanmiyur",
-	    "T.Nagar" };
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	Database db = new Database(Query.this);
+	ArrayList<String> stops = db.getStopNames("chennai");
+	final ArrayAdapter<String> stopsAdapter = new ArrayAdapter<String>(
+		Query.this, android.R.layout.simple_dropdown_item_1line, stops);
+
 	setContentView(R.layout.main);
 	button = (Button) findViewById(R.id.button1);
-
-	final ArrayAdapter<String> stops = new ArrayAdapter<String>(this,
-		android.R.layout.simple_dropdown_item_1line, STOPS);
 
 	Validator startStopValidator = new Validator() {
 	    @Override
 	    public boolean isValid(CharSequence text)
 	    {
-		if (stops.getPosition(text.toString()) == -1) {
+		if (text.equals("")
+			|| stopsAdapter.getPosition(text.toString()) == -1) {
 		    return false;
 		}
 		button.setEnabled(true);
@@ -61,7 +64,8 @@ public class Query extends Activity
 	    @Override
 	    public boolean isValid(CharSequence text)
 	    {
-		if (stops.getPosition(text.toString()) == -1) {
+		if (text.equals("")
+			|| stopsAdapter.getPosition(text.toString()) == -1) {
 		    return false;
 		}
 		button.setText(R.string.Find_route);
@@ -77,7 +81,7 @@ public class Query extends Activity
 	};
 
 	start_stop = (AutoCompleteTextView) findViewById(R.id.Start_stop);
-	start_stop.setAdapter(stops);
+	start_stop.setAdapter(stopsAdapter);
 	start_stop.setValidator(startStopValidator);
 	start_stop.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -114,7 +118,7 @@ public class Query extends Activity
 	});
 
 	end_stop = (AutoCompleteTextView) findViewById(R.id.End_stop);
-	end_stop.setAdapter(stops);
+	end_stop.setAdapter(stopsAdapter);
 	end_stop.setValidator(endStopValidator);
 	end_stop.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -154,12 +158,20 @@ public class Query extends Activity
 	    @Override
 	    public void onClick(View arg0)
 	    {
-		Intent i = new Intent(Query.this, TransitMap.class);
-		try {
-		    startActivity(i);
-		} catch (ActivityNotFoundException e) {
+		if (button.getText().equals("Goto Stop")) {
+		    Intent i = new Intent(Query.this, TransitMap.class);
+		    i.putExtra("query_type", "goto_stop");
+		    i.putExtra("stop_name", start_stop.getText().toString());
+		    try {
+			startActivity(i);
+		    } catch (ActivityNotFoundException e) {
+			Toast.makeText(Query.this,
+				"Activity not found.\n" + e.getMessage(),
+				Toast.LENGTH_LONG).show();
+		    }
+		} else {
 		    Toast.makeText(Query.this,
-			    "Activity not found.\n" + e.getMessage(),
+			    "This feature is not implemented yet.",
 			    Toast.LENGTH_LONG).show();
 		}
 	    }
